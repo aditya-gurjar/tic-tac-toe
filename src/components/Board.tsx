@@ -122,7 +122,13 @@ export const Board: React.FC<Props> = ({ boardSize }) => {
             return last
         }
         
-        return ""
+        for(let i=0; i<boardSize;i++) {
+            if(squares[i] !== 'X' && squares[i] !== 'O') {
+                return ""
+            }
+        }
+
+        return "tie"
     }
 
 
@@ -143,11 +149,18 @@ export const Board: React.FC<Props> = ({ boardSize }) => {
         return squareComponents
     }
     
-    
+    function reset() {
+        setSquares(Array(boardSize*boardSize).fill(null))
+        setIsPlayerXNext(true) 
+    }
+
+
     let status
     const winner = checkWinner()
     
-    if(winner) {
+    if(winner == "tie") {
+        status = "Game is finished. It's a tie!"
+    } else if(winner) {
         status = "Game is finished. Player " + winner + " is the winner."
     } else {
         status = "Game is ongoing. Player " + (isPlayerXNext? "X" : "O") + "'s turn."
@@ -159,7 +172,10 @@ export const Board: React.FC<Props> = ({ boardSize }) => {
             <div className="status">{status}</div>
             <div className="board" style={styles}>
                 { renderSquares(boardSize) }
-            </div>
+            </div><br/><br/>
+            <button className="reset" onClick={reset}>
+                Reset the Game.
+            </button><br/><br/>
         </div>
     )
 }
